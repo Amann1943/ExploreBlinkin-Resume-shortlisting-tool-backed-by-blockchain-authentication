@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table th, table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        table th {
+            background-color: #f4f7fc;
+        }
+        .button-container {
+            display: flex;
+            gap: 10px;
+        }
+        .download-btn, .auth-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .download-btn:hover, .auth-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Admin Panel - Uploaded Files</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>File Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="file-list">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Fetch uploaded files from localStorage
+        const certificate = localStorage.getItem('certificate');
+        const resume = localStorage.getItem('resume');
+        const fileList = document.getElementById('file-list');
+
+        let index = 1;
+
+        // Add rows to the table based on files stored
+        if (certificate) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index++}</td>
+                <td>${certificate}</td>
+                <td>
+                    <div class="button-container">
+                        <button class="download-btn" onclick="downloadFile('${certificate}')">Download</button>
+                        <button class="auth-btn" onclick="authenticate('${certificate}')">Authenticate</button>
+                    </div>
+                </td>`;
+            fileList.appendChild(row);
+        }
+
+        if (resume) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index++}</td>
+                <td>${resume}</td>
+                <td>
+                    <div class="button-container">
+                        <button class="download-btn" onclick="downloadFile('${resume}')">Download</button>
+                    </div>
+                </td>`;
+            fileList.appendChild(row);
+        }
+
+        if (!certificate && !resume) {
+            fileList.innerHTML = '<tr><td colspan="3" style="text-align: center;">No files uploaded yet.</td></tr>';
+        }
+
+        // Simulate file download
+        function downloadFile(fileName) {
+            const fileContent = "Sample content for " + fileName; // Placeholder file content
+            const blob = new Blob([fileContent], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = fileName;
+            link.click();
+        }
+
+        // Simulate authentication action
+        function authenticate(fileName) {
+            alert('Authenticating file: ${fileName}');
+            // Add your authentication logic here
+        }
+    </script>
+
+</body>
+</html>

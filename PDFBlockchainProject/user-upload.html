@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Upload Your Files</h2>
+
+        <!-- Certificate Upload -->
+        <label for="certificate-upload">Upload Certification</label>
+        <input type="file" id="certificate-upload" accept=".pdf,.docx,.jpg,.png" />
+
+        <!-- Resume Upload -->
+        <label for="resume-upload">Upload Resume</label>
+        <input type="file" id="resume-upload" accept=".pdf,.docx" />
+
+        <!-- Upload Button -->
+        <button onclick="uploadFiles()">Upload Files</button>
+    </div>
+
+    <script>
+        function uploadFiles() {
+            const certificate = document.getElementById('certificate-upload').files[0];
+            const resume = document.getElementById('resume-upload').files[0];
+
+            if (certificate && resume) {
+                alert('Files uploaded successfully');
+
+                // Store files in the localStorage (simulate storage)
+                localStorage.setItem('certificate', certificate.name);
+                localStorage.setItem('resume', resume.name);
+
+                // Redirect to the Admin Panel once files are uploaded
+                window.location.href = 'admin-panel.html';  // Admin sees uploaded files
+            } else {
+                alert('Please upload both certificate and resume.');
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>User Login</h2>
+    <label for="username">Username</label>
+    <input type="text" id="username" placeholder="Enter your username" required>
+    
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="Enter your password" required>
+    
+    <button onclick="loginUser()">Login</button>
+    <p style="text-align: center; margin-top: 10px;">Don't have an account? <a href="user-register.html">Register here</a></p>
+</div>
+
+<script>
+    function loginUser() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        const storedPassword = localStorage.getItem('user_${username}');
+        if (storedPassword === password) {
+            alert('Login successful! Redirecting to upload page.');
+            window.location.href = 'user-upload.html';
+        } else {
+            alert('Invalid username or password. Please try again.');
+        }
+    }
+</script>
+
+</body>
+</html>
