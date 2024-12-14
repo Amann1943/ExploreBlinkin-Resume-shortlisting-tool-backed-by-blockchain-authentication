@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Analyzer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .no-results {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Resume Analyzer</h1>
+    <form method="POST">
+        <button type="submit">Upload Resumes</button>
+    </form>
+
+    {% if categorized_resumes %}
+        {% for job, results in categorized_resumes.items() %}
+            <h2>Job Opening: {{ job }}</h2>
+            {% if results %}
+                <table>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Skill Match (%)</th>
+                        <th>Matched Skills</th>
+                        <th>Missing Skills</th>
+                        <th>Experience (Years)</th>
+                        <th>Status</th>
+                    </tr>
+                    {% for idx, result in enumerate(results) %}
+                        <tr>
+                            <td>{{ idx + 1 }}</td>
+                            <td>{{ result.skill_percentage }}</td>
+                            <td>{{ result.matched_skills | join(", ") }}</td>
+                            <td>{{ result.missing_skills | join(", ") }}</td>
+                            <td>{{ result.experience_years }}</td>
+                            <td>{{ result.status }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="no-results">No suitable candidates found.</p>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</body>
+</html>

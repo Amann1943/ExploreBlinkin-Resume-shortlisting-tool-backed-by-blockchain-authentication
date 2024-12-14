@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparison Results</title>
+</head>
+<body>
+    <h1>Comparison Results for {{ filename }}</h1>
+    {% if error %}
+        <p>{{ error }}</p>
+    {% else %}
+        <p>Text Similarity Score: {{ text_similarity_score }}%</p>
+        <p>Image Similarity Score: {{ image_similarity_score }}%</p>
+        <p>QR Code Similarity Score: {{ qr_similarity_score }}%</p>
+        <p>Overall Similarity Score: {{ overall_similarity }}%</p>
+    {% endif %}
+    <br>
+    <a href="{{ url_for('index') }}">Back to Home</a>
+</body>
+</html>

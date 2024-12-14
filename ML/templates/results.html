@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results</title>
+</head>
+<body>
+    <h1>Resume Analysis Results</h1>
+    {% for job, results in categorized_resumes.items() %}
+        <h2>Job Opening: {{ job }}</h2>
+        {% if results %}
+            <ul>
+            {% for result in results %}
+                <li>
+                    Skill Match: {{ result.skill_percentage }}%<br>
+                    Matched Skills: {{ result.matched_skills|join(', ') }}<br>
+                    Missing Skills: {{ result.missing_skills|join(', ') }}<br>
+                    Experience: {{ result.experience_years }} years<br>
+                    Status: {{ result.status }}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No suitable candidates found.</p>
+        {% endif %}
+    {% endfor %}
+</body>
+</html>
