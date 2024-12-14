@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<style>
+    /* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+/* Container */
+.container {
+    text-align: center;
+    padding: 30px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+}
+
+/* Headings */
+h1 {
+    font-size: 2.5rem;
+    color: #4a4a4a;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 2rem;
+    color: #4a4a4a;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+h3 {
+    font-size: 1.5rem;
+    color: #4a4a4a;
+    margin: 20px 0 10px;
+}
+
+/* Form */
+form {
+    margin: 20px 0;
+}
+
+.upload-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.upload-btn:hover {
+    background-color: #218838;
+}
+
+/* Job Results Section */
+.job-results {
+    margin-top: 20px;
+    padding: 10px;
+}
+
+ol {
+    padding-left: 0;
+    list-style-type: none;
+}
+
+.result-card {
+    background-color: #f9f9f9;
+    margin: 10px 0;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+/* Result Information */
+.result-info {
+    line-height: 1.8;
+}
+
+.result-info strong {
+    color: #555;
+}
+
+/* Status Badge */
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border-radius: 12px;
+    text-transform: uppercase;
+    margin-top: 10px;
+}
+
+.status-badge.accepted {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-badge.rejected {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Footer */
+footer {
+    margin-top: 30px;
+    color: #777;
+    font-size: 0.9rem;
+}
+
+</style>
+<body>
+    <body>
+        <h1>Welcome to the Resume Analyzer</h1>
+        {% if categorized_resumes %}
+            <!-- Render the categorized results here -->
+            {% for job, results in categorized_resumes.items() %}
+                <h2>{{ job }}</h2>
+                <ul>
+                    {% for result in results %}
+                        <li>
+                            <strong>Skill Match:</strong> {{ result.skill_percentage }}%<br>
+                            <strong>Matched Skills:</strong> {{ result.matched_skills|join(', ') }}<br>
+                            <strong>Missing Skills:</strong> {{ result.missing_skills|join(', ') }}<br>
+                            <strong>Experience:</strong> {{ result.experience_years }} years<br>
+                            <strong>Status:</strong> {{ result.status }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        {% else %}
+            <p>No resumes uploaded yet. Click the "Upload Resumes" button to start analyzing resumes.</p>
+        {% endif %}
+    </body>
+    </html>

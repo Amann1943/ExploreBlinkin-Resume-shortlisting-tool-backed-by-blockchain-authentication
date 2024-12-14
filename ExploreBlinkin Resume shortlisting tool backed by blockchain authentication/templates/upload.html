@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Upload</title>
+</head>
+<style>
+    /* General Styles */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+    }
+
+    h1 {
+        color: #333;
+        font-size: 28px;
+        margin-top: 30px;
+    }
+
+    h2 {
+        font-size: 24px;
+        margin-top: 30px;
+        color: #333;
+    }
+
+    h3 {
+        font-size: 20px;
+        margin-top: 20px;
+        color: #333;
+    }
+
+    label {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    input[type="file"] {
+        margin-bottom: 20px;
+    }
+
+    button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    #fileList {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    #fileList li {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+</style>
+
+<body>
+    <h1>Upload PDF</h1>
+    
+    <form id="uploadForm" enctype="multipart/form-data">
+        <label for="file">Choose PDF file:</label>
+        <input type="file" id="file" name="file" accept=".pdf" required>
+        <button type="submit">Upload</button>
+    </form>
+    
+    <h2>Uploaded Files</h2>
+    <ul id="fileList"></ul>
+
+    <script>
+        // Function to handle the file upload and store it in localStorage
+        document.getElementById("uploadForm").addEventListener("submit", function(event) {
+            event.preventDefault();  // Prevent form submission to server
+            
+            const fileInput = document.getElementById("file");
+            const file = fileInput.files[0];
+
+            if (file && file.type === "application/pdf") {
+                // Read the file as a Data URL (Base64 encoded)
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    // Store the file in localStorage
+                    const fileData = e.target.result;  // Base64 string of the file
+                    const uploadedFiles = JSON.parse(localStorage.getItem("uploadedFiles")) || [];
+                    uploadedFiles.push({
+                        name: file.name,
+                        data: fileData
+                    });
+                    // Save the updated file list in localStorage
+                    localStorage.setItem("uploadedFiles", JSON.stringify(uploadedFiles));
+
+                    // Display the uploaded files
+                    displayUploadedFiles();
+                };
+
+                reader.readAsDataURL(file);  // Read file as Base64 string
+            } else {
+                alert("Please upload a valid PDF file.");
+            }
+        });
+
+        // Function to display uploaded files from localStorage
+        function displayUploadedFiles() {
+            const fileList = JSON.parse(localStorage.getItem("uploadedFiles")) || [];
+            const fileListContainer = document.getElementById("fileList");
+            fileListContainer.innerHTML = "";  // Clear existing list
+            
+            fileList.forEach(file => {
+                const li = document.createElement("li");
+                li.textContent = file.name;
+                fileListContainer.appendChild(li);
+            });
+        }
+
+        // Display previously uploaded files when the page loads
+        displayUploadedFiles();
+    </script>
+
+</body>
+</html>

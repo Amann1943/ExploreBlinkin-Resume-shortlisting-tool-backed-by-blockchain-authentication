@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - View Uploaded PDFs</title>
+</head>
+<style>
+    /* General Styles */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+    }
+
+    h1 {
+        font-size: 32px;
+        color: #333;
+        margin-top: 20px;
+    }
+
+    h2 {
+        font-size: 24px;
+        color: #555;
+        margin-top: 30px;
+    }
+
+    #fileList {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 20px;
+        width: 80%;
+        max-width: 600px;
+    }
+
+    #fileList li {
+        background-color: #fff;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    a {
+        text-decoration: none;
+        color: #007bff;
+        font-size: 16px;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    button {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 16px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #218838;
+    }
+
+    /* Flash message */
+    .flash-message {
+        color: #721c24;
+        background-color: #f8d7da;
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 20px;
+        width: 80%;
+        max-width: 600px;
+    }
+
+    /* Comparison Result Styling */
+    #comparisonResult {
+        margin-top: 30px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        width: 80%;
+        max-width: 600px;
+    }
+</style>
+
+<body>
+    <h1>Admin Panel - Uploaded PDFs</h1>
+    <h2>Uploaded Files</h2>
+    <ul id="fileList"></ul>
+
+    <!-- Placeholder for comparison result -->
+    <div id="comparisonResult" style="display: none;">
+        <h3>Comparison Result:</h3>
+        <div id="resultDetails"></div>
+    </div>
+
+    <script>
+        // Check if the admin is logged in
+        if (!localStorage.getItem("isAdminLoggedIn")) {
+            // If not logged in, redirect to login page
+            window.location.href = "admin_login.html";
+        }
+
+        // Function to display uploaded files from localStorage
+        function displayUploadedFiles() {
+            const fileList = JSON.parse(localStorage.getItem("uploadedFiles")) || [];
+            const fileListContainer = document.getElementById("fileList");
+            fileListContainer.innerHTML = "";  // Clear existing list
+            
+            if (fileList.length === 0) {
+                fileListContainer.innerHTML = "<li>No files uploaded yet.</li>";
+            }
+
+            fileList.forEach((file, index) => {
+                const li = document.createElement("li");
+
+                // Create a download link for each uploaded file
+                const downloadLink = document.createElement("a");
+                downloadLink.href = file.data; // The Base64 string
+                downloadLink.download = file.name; // Suggests the file name for download
+                downloadLink.textContent = "Download " + file.name; // Display file name with download text
+
+                // Create an "Authenticate" button for each uploaded file
+                const authenticateButton = document.createElement("button");
+                authenticateButton.textContent = "Authenticate";
+                authenticateButton.onclick = () => authenticateFile(file);
+
+                // Append download link and authenticate button to the list item
+                li.appendChild(downloadLink);
+                li.appendChild(document.createTextNode(" ")); // Space between link and button
+                li.appendChild(authenticateButton);
+                fileListContainer.appendChild(li);
+            });
+        }
+
+        // Function to handle file authentication
+        function authenticateFile(file) {
+            alert("Authenticating file: " + file.name);
+
+            // Call the API or function to perform a real comparison with blockchain
+            const result = compareFileWithBlockchain(file);
+
+            // Display the comparison result
+            displayComparisonResult(result);
+
+            // Provide the result as a statement
+            if (result.match_status === "No match found") {
+                alert("The skills required are not a match. Client is rejected.");
+                // Optionally, you can hide or disable the authenticate button if needed
+                const authenticateButton = document.querySelector(`button[onclick="authenticateFile(${file.name})"]`);
+                authenticateButton.disabled = true;
+            } else {
+                // Provide a statement instead of redirecting
+                alert("Match found! The file has been authenticated successfully.");
+            }
+        }
+
+        // Real comparison function with blockchain or backend API
+        function compareFileWithBlockchain(file) {
+            // Call your blockchain API or comparison logic here to get real data
+            // Assuming this function returns the necessary data:
+            const result = {
+                text_similarity_score: 85, // Example: replace with real data
+                image_similarity_score: 90, // Example: replace with real data
+                qr_similarity_score: 95, // Example: replace with real data
+                overall_similarity: 90, // Example: replace with real data
+                match_status: "Match found"
+            };
+            return result;
+        }
+
+        // Function to display the comparison result on the page
+        function displayComparisonResult(result) {
+            const resultElement = document.getElementById("resultDetails");
+
+            resultElement.innerHTML = ` 
+                <strong>Text Similarity Score:</strong> ${result.text_similarity_score}%<br>
+                <strong>Image Similarity Score:</strong> ${result.image_similarity_score}%<br>
+                <strong>QR Code Similarity Score:</strong> ${result.qr_similarity_score}%<br>
+                <strong>Overall Similarity Score:</strong> ${result.overall_similarity}%<br>
+                <strong>Final Match Status:</strong> ${result.match_status}
+            `;
+
+            // Show the comparison result section
+            document.getElementById("comparisonResult").style.display = "block";
+        }
+
+        // Display previously uploaded files when the page loads
+        displayUploadedFiles();
+    </script>
+</body>
+</html>

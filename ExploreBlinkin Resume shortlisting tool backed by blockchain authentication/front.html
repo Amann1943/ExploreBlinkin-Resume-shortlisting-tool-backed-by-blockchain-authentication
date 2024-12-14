@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Shortlisting</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5cb85c;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        p {
+            text-align: center;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+
+        .result p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Upload Resume</h2>
+        <form id="resume-form">
+            <input type="file" id="resume" required>
+            <button type="submit">Upload</button>
+        </form>
+        <div id="result" class="result" style="display: none;">
+            <p><strong>Extracted Text:</strong> <span id="extracted-text"></span></p>
+            <p><strong>Objective:</strong> <span id="objective"></span></p>
+            <p><strong>Academic Details:</strong> <span id="academic-details"></span></p>
+            <p><strong>Experience:</strong> <span id="experience"></span></p>
+            <p><strong>Responsibilities:</strong> <span id="responsibilities"></span></p>
+            <p><strong>Skills:</strong> <span id="skills"></span></p>
+            <p><strong>Extracted QR Codes:</strong> <span id="extracted-qr"></span></p>
+            <p><strong>Text Similarity Score:</strong> <span id="similarity-score"></span></p>
+            <p><strong>QR Code Similarity:</strong> <span id="qr-similarity"></span></p>
+            <p><strong>Overall Similarity:</strong> <span id="overall-similarity"></span></p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('resume-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const file = document.getElementById('resume').files[0];
+            if (file) {
+                const formData = new FormData();
+                formData.append('resume', file);
+
+                fetch('/process_resume', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('result').style.display = 'block';
+                    document.getElementById('extracted-text').textContent = data.extracted_text;
+                    document.getElementById('objective').textContent = data.objective;
+                    document.getElementById('academic-details').textContent = data.academic_details;
+                    document.getElementById('experience').textContent = data.experience;
+                    document.getElementById('responsibilities').textContent = data.responsibilities;
+                    document.getElementById('skills').textContent = data.skills;
+                    document.getElementById('extracted-qr').textContent = data.extracted_qr.join(', ');
+                    document.getElementById('similarity-score').textContent = data.similarity_score.toFixed(2);
+                    document.getElementById('qr-similarity').textContent = data.qr_similarity.toFixed(2);
+                    document.getElementById('overall-similarity').textContent = data.overall_similarity.toFixed(2);
+                })
+                .catch(error => console.error('Error:', error));
+            } else {
+                alert('Please select a file.');
+            }
+        });
+    </script>
+</body>
+</html>
